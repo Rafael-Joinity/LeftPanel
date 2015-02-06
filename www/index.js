@@ -59,4 +59,3 @@ var app = {
 
     }
 };
-app.initialize();
