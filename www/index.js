@@ -26,21 +26,20 @@ var app = {
     // Bind any events that are required on startup. Common events are:
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
-        document.addEventListener('deviceready', app.onDeviceReady, false);
+      document.addEventListener('deviceready', this.onDeviceReady, false);
+      alert('bindEvents ')
     },
     // deviceready Event Handler
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-        alert('onDeviceReady ')
+      this.receivedEvent('deviceready');
+      alert('onDeviceReady ')
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-
-        console.log('Received Event: ' + id);
-        alert('Received Event: ' + id)
+        alert('receivedEvent')
 
         var panel = new swipe_panel({
             elementTop      : 100,
@@ -50,6 +49,6 @@ var app = {
         });
         panel.initSwipe();
 
+        alert(panel)
     }
 };
-app.initialize();
