@@ -46,13 +46,29 @@
     bottom: 0;
     left: 0%;
   }
+
+  .panel_position{  
+    transform: translate(-100%,0); 
+    -ms-transform:: translate(-100%,0); 
+    -moz-transform:: translate(-100%,0); 
+    -webkit-transform:: translate(-100%,0); 
+    position: fixed; 
+    bottom: 0; 
+  } 
+  .animate{ 
+    transition: transform .5s cubic-bezier(.3,.3,.11,.9); 
+    -moz-transition: transform .5s cubic-bezier(.3,.3,.11,.9); 
+    -webkit-transition: -webkit-transform .5s cubic-bezier(.3,.3,.11,.9); 
+  }
+
+
   </style>
   <script src="http://192.168.1.15:8080/target/target-script-min.js#anonymous"></script>
 
 <body>
 
   <header id="header">cabecera</header>
-<div id="panel" >
+<div id="panel" class="panel_position">
   <ul>
     <li>About us</li>
     <li>Market place</li>
@@ -117,23 +133,11 @@
       var style = document.createElement('style');
       style.type = 'text/css';
       
-      style.innerHTML = '.panel_position{ ' +
-                            'transform: translate(-100%,0);'+
-                            '-ms-transform:: translate(-100%,0);'+
-                            '-moz-transform:: translate(-100%,0);'+
-                            '-webkit-transform:: translate(-100%,0);' +
-                            'position: fixed;'+
-                            'bottom: 0;'+
-                            'top: '+ elementTop + 'px;'+
-                            'width: '+ elementWidth + '%;'+
-                        '}'+
-                        '.animate{ ' +
-                          'transition: transform .5s cubic-bezier(.3,.3,.11,.9); ' +
-                          '-moz-transition: transform .5s cubic-bezier(.3,.3,.11,.9); ' +
-                          '-webkit-transition: -webkit-transform .5s cubic-bezier(.3,.3,.11,.9); ' +
+      style.innerHTML = '.panel_position{  ' +
+                            'top: '+ elementTop + 'px; ' +
+                            'width: '+ elementWidth + '%; ' +
                         '}';
       document.getElementsByTagName('head')[0].appendChild(style);
-      self.panel.classList.add("panel_position");
     }
     
     // TOUCH EVENTS INITIALIZE
@@ -290,7 +294,7 @@
   }
 
   var panel = new swipe_panel({
-      elementTop      : 150,
+      elementTop      : 100,
       elementDisabled : true,
       onTouch         : 'patata3',
       onTouchFinish   : 'patata4'
