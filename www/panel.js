@@ -56,6 +56,7 @@ HOW TO USE:
     var position;               // PANEL OFFSET LEFT ON SWIPE FINISH
     var moveX;                  // TOUCH POSITION DURING SWIPE AND TOUCH POSITION ON SWIPE FINISH
     var moved = false;          // AUXILIAR VARIABLE TO APPLY TRANSITIONS OR NOT AFTER SWIPE
+    var allow_swipe = true;
     var swipeMaxDistance = (WScreen * elementWidth) / 100 ;   // MAX SWIPE DISTANCE
     var swipeMinDistance = defaults.elementDistance || 20;    // MIN SWIPE DISTANCE IN PIXELS
     var touchcallback = defaults.onTouch ? defaults.onTouch : false;      // NECESARY TO EXECUTE CALLBACKS ON TOUCH START
@@ -152,10 +153,12 @@ HOW TO USE:
     
     //  FUNTION ON TOUCH START
     var swipeStartHandler = function(startEvent){
+      allow_swipe = true;
       if (self.panel.classList.contains('open') && defaults.elementDisabled && 
           startEvent.target.id != self.panel.id && !startEvent.target.classList.contains('panelDisabled')){
         startEvent.preventDefault();
         self.closePanel();
+        allow_swipe = false;
       }
       var touchStart  = startEvent.changedTouches[0];
       swipeStartX     = touchStart.clientX;
@@ -168,19 +171,21 @@ HOW TO USE:
     // OPTION IF MIN TOUCH START POINT OPTION IS DESIRED
     if (MinPoint){
       var swipeMoveHandler = function(moveEvent){
-        var touchMove = moveEvent.changedTouches[0];    
-        moveX     = touchMove.clientX; 
-        movement      = moveX - swipeStartX;
-        position      = left + movement;   
+        if (allow_swipe){
+          var touchMove = moveEvent.changedTouches[0];    
+          moveX     = touchMove.clientX; 
+          movement      = moveX - swipeStartX;
+          position      = left + movement;   
 
-        if ( (((swipeStartX < swipeMinPoint) && (left < -10)) || ((movement < -swipeMinDistance) && (left > -10))) && (movement < swipeMaxDistance) ){
-          self.panel.style.WebkitTransform = "translate(" + position + "px ,0)";
-          self.panel.style.MozTransform    = "translate(" + position + "px ,0)";
-          self.panel.style.transform       = "translate(" + position + "px ,0)";
-          moved = true;                   
-          if(touchcallback) {
-            window[defaults.onTouch]()
-            touchcallback = false;
+          if ( (((swipeStartX < swipeMinPoint) && (left < -10)) || ((movement < -swipeMinDistance) && (left > -10))) && (movement < swipeMaxDistance) ){
+            self.panel.style.WebkitTransform = "translate(" + position + "px ,0)";
+            self.panel.style.MozTransform    = "translate(" + position + "px ,0)";
+            self.panel.style.transform       = "translate(" + position + "px ,0)";
+            moved = true;                   
+            if(touchcallback) {
+              window[defaults.onTouch]()
+              touchcallback = false;
+            }
           }
         }
       }
@@ -188,19 +193,21 @@ HOW TO USE:
     // OPTION IF MIN MOVEMENT OPTION IS DESIRED 
     else{
       var swipeMoveHandler = function(moveEvent){
-        var touchMove = moveEvent.changedTouches[0];    
-        moveX     = touchMove.clientX; 
-        movement      = moveX - swipeStartX;
-        position      = left + movement;   
+        if (allow_swipe){
+          var touchMove = moveEvent.changedTouches[0];    
+          moveX     = touchMove.clientX; 
+          movement      = moveX - swipeStartX;
+          position      = left + movement;   
 
-        if ( (((movement > swipeMinDistance) && (left < -10)) || ((movement < -swipeMinDistance) && (left > -10))) && (movement < swipeMaxDistance) ){
-          self.panel.style.WebkitTransform = "translate(" + position + "px ,0)";
-          self.panel.style.MozTransform    = "translate(" + position + "px ,0)";
-          self.panel.style.transform       = "translate(" + position + "px ,0)";
-          moved = true;          
-          if(touchcallback) {
-            window[defaults.onTouch]()
-            touchcallback = false;
+          if ( (((movement > swipeMinDistance) && (left < -10)) || ((movement < -swipeMinDistance) && (left > -10))) && (movement < swipeMaxDistance) ){
+            self.panel.style.WebkitTransform = "translate(" + position + "px ,0)";
+            self.panel.style.MozTransform    = "translate(" + position + "px ,0)";
+            self.panel.style.transform       = "translate(" + position + "px ,0)";
+            moved = true;          
+            if(touchcallback) {
+              window[defaults.onTouch]()
+              touchcallback = false;
+            }
           }
         }
       }
