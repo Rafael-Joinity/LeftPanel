@@ -95,11 +95,20 @@
   </div>
 </body>
   <script src="cordova.js"></script>
-  <script src="index.js"></script>
   <script src="panel.js"></script>
+  <script src="index.js"></script>
   <script type="text/javascript">
 
     app.initialize();
+
+
+    var panel = new swipe_panel({
+        elementTop      : 100,
+        elementDisabled : true,
+        onTouch         : 'patata3',
+        onTouchFinish   : 'patata4'
+    });
+    panel.initSwipe();
 
     function patata1(){
       console.log('patata1')

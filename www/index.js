@@ -28,16 +28,6 @@ var app = {
     bindEvents: function() {
       document.addEventListener('deviceready', app.onDeviceReady, false);
       alert('bindEvents ')
-
-        var panel = new swipe_panel({
-            elementTop      : 100,
-            elementDisabled : true,
-            onTouch         : 'patata3',
-            onTouchFinish   : 'patata4'
-        });
-        panel.initSwipe();
-
-        alert(panel)
     },
     // deviceready Event Handler
     //
