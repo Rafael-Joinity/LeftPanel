@@ -218,14 +218,11 @@ HOW TO USE:
       var time = ( moveEvent.timeStamp - initTime) /1000;  // TIME FROM TOUCH START TO TOUCH END
       var forze = true;
       if (time <= 1 && moved === true){ 
-        if (movement > WScreen/4) { self.openPanel()  }
-        else{
-          (movement < -WScreen/4) ? self.closePanel() : self.resetPanel(forze)
-        }
+        (movement > WScreen/4) ? self.openPanel() : self.closePanel(forze)
         defaults.onTouchFinish ? window[defaults.onTouchFinish]() : false ;
       }
       if (time > 1 && moved === true){
-        (movement > WScreen/2.5) ? self.openPanel() : self.resetPanel(forze)
+        (movement > WScreen/2) ? self.openPanel() : self.resetPanel(forze)
         defaults.onTouchFinish ? window[defaults.onTouchFinish]() : false ;
       }
       moved = false;
