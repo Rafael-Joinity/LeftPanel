@@ -1,0 +1,24 @@
+  .panel_position.left{  
+    transform: translate(-100%,0); 
+    -ms-transform:: translate(-100%,0); 
+    -moz-transform: translate(-100%,0); 
+    -webkit-transform: translate(-100%,0); 
+    -webkit-transform: -webkit-translate(-100%,0); 
+    position: fixed; 
+    bottom: 0; 
+  } 
+.panel_position.left.open{  
+  transform: translate(0,0); 
+  -ms-transform:: translate(0,0); 
+  -moz-transform: translate(0,0); 
+  -webkit-transform: translate(0,0); 
+  -webkit-transform: -webkit-translate(0,0); 
+  position: fixed; 
+  bottom: 0; 
+} 
+  .animate{ 
+    transition: transform .5s cubic-bezier(.3,.3,.11,.9);  
+    -webkit-transition: transform .5s cubic-bezier(.3,.3,.11,.9);
+    -moz-transition: transform .5s cubic-bezier(.3,.3,.11,.9); 
+    -webkit-transition: -webkit-transform .5s cubic-bezier(.3,.3,.11,.9);
+  }

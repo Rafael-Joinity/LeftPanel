@@ -29,9 +29,9 @@ HOW TO USE:
 */
 
   var swipe_panel = function(settings){
-
-    alert('patata-0')
+    "use strict";
     var self = this;
+    var defaults;
     settings ? defaults = settings : defaults = {};
 
     // PANEL VARIABLES
@@ -56,11 +56,20 @@ HOW TO USE:
     var position;               // PANEL OFFSET LEFT ON SWIPE FINISH
     var moveX;                  // TOUCH POSITION DURING SWIPE AND TOUCH POSITION ON SWIPE FINISH
     var moved = false;          // AUXILIAR VARIABLE TO APPLY TRANSITIONS OR NOT AFTER SWIPE
-    var allow_swipe = true;
+    var forze = false;          // AUXILIAR VARIABLE TO FORZE SWIPE TO APPEND
+    var allow_swipe = true;     // AUXILIAR VARIABLE TO AVOID PANEL MOVEMENT ON CLICK OUTSIDE IT
     var swipeMaxDistance = (WScreen * elementWidth) / 100 ;   // MAX SWIPE DISTANCE
+    console.log(swipeMaxDistance)
     var swipeMinDistance = defaults.elementDistance || 20;    // MIN SWIPE DISTANCE IN PIXELS
     var touchcallback = defaults.onTouch ? defaults.onTouch : false;      // NECESARY TO EXECUTE CALLBACKS ON TOUCH START
+    
 
+    /*
+    MEASURE JAVASCRIPT MEMORY USAGE
+    setInterval(function(){
+      console.log(window.performance.memory);
+    },1000);
+    */
     // CSS STYLE AND ANIMATION FOR PANEL TRANSITIONS
     var addStyle = function(){
       var style = document.createElement('style');
@@ -79,6 +88,8 @@ HOW TO USE:
       document.addEventListener("touchstart", swipeStartHandler, false ); // EVENT FIRED ON TOUCH START
       document.addEventListener("touchmove" , swipeMoveHandler , false ); // EVENT FIRED DURING TOUCH
       document.addEventListener("touchend"  , swipeEndHandler  , true  ); // EVENT FIRED ON TOUCH FINISH
+      document.addEventListener("mousedown", swipeStartHandler, false ); // EVENT FIRED ON MOUSE CLICK START
+      document.addEventListener("mouseup"  , swipeEndHandler  , true  ); // EVENT FIRED ON MOUSE CLICK START
       //document.addEventListener("touchenter", endHandler, true);
       //document.addEventListener("touchleave", endHandler, true);
       //document.addEventListener("touchcancel", cancelHandler, true);   
@@ -142,7 +153,7 @@ HOW TO USE:
 
     // FUNTION TO KEEP PANEL AS IT WAS
     self.resetPanel = function(){
-      var forze = true;
+      forze = true;
       self.panel.classList.contains('open') ? self.openPanel(forze) : self.closePanel(forze);
     }
     
@@ -160,20 +171,31 @@ HOW TO USE:
         self.closePanel();
         allow_swipe = false;
       }
-      var touchStart  = startEvent.changedTouches[0];
-      swipeStartX     = touchStart.clientX;
+
+      startEvent.changedTouches ? 
+        swipeStartX = startEvent.changedTouches[0].clientX :
+        ( 
+          swipeStartX = startEvent.x ,  
+          document.addEventListener("mousemove", swipeMoveHandler, false ) // EVENT FIRED ON MOUSE CLICK START
+        ) 
+      
       left            = self.panel.getBoundingClientRect().left;
       initTime        = startEvent.timeStamp;
       touchcallback = defaults.onTouch ? defaults.onTouch : false;
     }  
  
-    // FUNTIONS ON DRAG DEPENDING OF DEFAULTS OPTIONS 
-    // OPTION IF MIN TOUCH START POINT OPTION IS DESIRED
+
+    /*/////////////////////////////////////////////////
+     FUNTIONS ON DRAG DEPENDING OF DEFAULTS OPTIONS 
+
+    /*                                                //
+      OPTION IF MIN TOUCH START POINT OPTION IS DESIRED
+    //                                                */
+
     if (MinPoint){
       var swipeMoveHandler = function(moveEvent){
         if (allow_swipe){
-          var touchMove = moveEvent.changedTouches[0];    
-          moveX     = touchMove.clientX; 
+          moveEvent.changedTouches ? moveX = moveEvent.changedTouches[0].clientX : moveX = moveEvent.x
           movement      = moveX - swipeStartX;
           position      = left + movement;   
 
@@ -190,12 +212,16 @@ HOW TO USE:
         }
       }
     }
-    // OPTION IF MIN MOVEMENT OPTION IS DESIRED 
+
+    /*                                        //
+
+      OPTION IF MIN MOVEMENT OPTION IS DESIRED 
+
+    //                                        */
     else{
       var swipeMoveHandler = function(moveEvent){
         if (allow_swipe){
-          var touchMove = moveEvent.changedTouches[0];    
-          moveX     = touchMove.clientX; 
+          moveEvent.changedTouches ? moveX = moveEvent.changedTouches[0].clientX : moveX = moveEvent.x
           movement      = moveX - swipeStartX;
           position      = left + movement;   
 
@@ -213,17 +239,25 @@ HOW TO USE:
       }
     }
 
-    //FUNTION ON TOUCH FINISH
+    /*                        //
+
+      FUNTION ON TOUCH FINISH
+
+    //                        */
+
     var swipeEndHandler = function(moveEvent){
+      moveEvent.changedTouches ? false : document.removeEventListener("mousemove", swipeMoveHandler, false ); // EVENT FIRED ON CLICK FINISH
       var time = ( moveEvent.timeStamp - initTime) /1000;  // TIME FROM TOUCH START TO TOUCH END
-      var forze = true;
-      if (time <= 1 && moved === true){ 
-        (movement > WScreen/4) ? self.openPanel() : self.closePanel(forze)
+      forze = true;
+      if (time < .5 && moved === true){ 
+        (movement > WScreen/7) ? self.openPanel() : self.closePanel(forze)
         defaults.onTouchFinish ? window[defaults.onTouchFinish]() : false ;
       }
-      if (time > 1 && moved === true){
-        (movement > WScreen/2) ? self.openPanel() : self.resetPanel(forze)
-        defaults.onTouchFinish ? window[defaults.onTouchFinish]() : false ;
+      else{
+        if (moved === true){
+          (movement > WScreen/3) ? self.openPanel() : self.resetPanel(forze)
+          defaults.onTouchFinish ? window[defaults.onTouchFinish]() : false ;
+        }
       }
       moved = false;
     }
